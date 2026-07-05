@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<!-- 
+    <gazebo reference="front_caster_link">
+        <mu1>0.1</mu1>
+        <mu2>0.1</mu2>
+    </gazebo>
+
+    <gazebo reference="rear_caster_link">
+        <mu1>0.1</mu1>
+        <mu2>0.1</mu2>
+    </gazebo> -->
+
+    <gazebo reference="front_caster_link">
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+    </gazebo>
+
+    <gazebo reference="rear_caster_link">
+        <mu1>0.0</mu1>
+        <mu2>0.0</mu2>
+    </gazebo>
+
+    <gazebo reference="left_wheel">
+        <mu1>1.5</mu1>
+        <mu2>1.5</mu2>
+        <kp>1000000.0</kp>
+        <kd>100.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
+    </gazebo>
+
+    <gazebo reference="right_wheel">
+        <mu1>1.5</mu1>
+        <mu2>1.5</mu2>
+        <kp>1000000.0</kp>
+        <kd>100.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
+    </gazebo>
+
+    <!-- Diff Drive Plugin -->
+    <gazebo>
+        <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+            <!-- Wheel Joints -->
+            <left_joint>left_wheel_joint</left_joint>
+            <right_joint>right_wheel_joint</right_joint>
+
+            <!-- Kinematics -->
+            <wheel_separation>0.45</wheel_separation>
+            <wheel_radius>0.1</wheel_radius>
+
+            <!-- Limits -->
+            <max_linear_acceleration>10.0</max_linear_acceleration>
+            <max_angular_acceleration>10.0</max_angular_acceleration>
+
+            <!-- Input/Output -->
+            <topic>/model/$(arg namespace)/cmd_vel</topic>
+            <odom_topic>/model/$(arg namespace)/odom</odom_topic>
+            <tf_topic>/model/$(arg namespace)/odom_tf_dummy</tf_topic>
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>false</publish_odom_tf>
+            <publish_wheel_tf>false</publish_wheel_tf>
+        </plugin>
+    </gazebo>
+
+    <!-- Ground Truth Odometry Plugin -->
+    <gazebo>
+        <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+            <odom_frame>$(arg namespace)/odom</odom_frame>
+            <robot_base_frame>$(arg namespace)/base_footprint</robot_base_frame>
+            <odom_topic>/model/$(arg namespace)/ground_truth</odom_topic>
+            <tf_topic>/model/$(arg namespace)/tf</tf_topic>
+            <publish_tf>true</publish_tf>
+            <odom_publish_frequency>50</odom_publish_frequency>
+            <dimensions>2</dimensions>
+        </plugin>
+    </gazebo>
+
+    <!-- Joint State Publisher Plugin -->
+    <gazebo>
+        <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+            <topic>model/$(arg namespace)/joint_states</topic>
+        </plugin>
+    </gazebo>
+
+
+    <gazebo reference="lidar_link">
+        <sensor name="gpu_lidar" type="gpu_lidar">
+            <gz_frame_id>$(arg namespace)/lidar_link</gz_frame_id>
+            <pose relative_to="lidar_link">0 0 0 0 0 0</pose>
+            <topic>scan</topic>
+            <update_rate>20</update_rate>
+            <ray> 
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14159</min_angle>
+                        <max_angle>3.14159</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.05</min> 
+                    <max>5.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                 <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.001</stddev>
+                </noise>
+            </ray>
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+        </sensor>
+    </gazebo>
+
+</robot>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<robot name="noisy_boy" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    
+    <xacro:arg name="namespace" default=""/>
+    
+    <xacro:include filename="noisy_boy_common_properties.xacro"/>
+    <xacro:include filename="noisy_boy_base.xacro"/>
+    <xacro:include filename="noisy_boy_gazebo.xacro"/>
+    <xacro:include filename="noisy_boy_sensors.xacro"/>
+    <!-- <xacro:include filename="noisy_boy_ros2_control.xacro"/> -->
+
+
+</robot>
